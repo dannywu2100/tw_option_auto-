@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPlus1 盤中核對清單</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --paper: rgba(255, 252, 247, 0.94);
+      --ink: #1e1c19;
+      --muted: #6e655d;
+      --line: rgba(60, 42, 26, 0.12);
+      --accent: #af5d35;
+      --accent-soft: rgba(175, 93, 53, 0.12);
+      --teal: #1f6a68;
+      --teal-soft: rgba(31, 106, 104, 0.12);
+      --gold: #d29c3c;
+      --danger: #a84334;
+      --shadow: 0 18px 52px rgba(66, 46, 29, 0.12);
+      --radius: 24px;
+      --content: 1160px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(210, 156, 60, 0.22), transparent 30%),
+        radial-gradient(circle at top right, rgba(31, 106, 104, 0.16), transparent 34%),
+        linear-gradient(180deg, #faf7f0, #f2eadf 58%, #ece0d0 100%);
+    }
+
+    .page {
+      width: min(calc(100% - 28px), var(--content));
+      margin: 0 auto;
+      padding: 24px 0 64px;
+    }
+
+    .hero,
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.12;
+      font-weight: 800;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 4vw, 3.7rem);
+      margin-bottom: 14px;
+      max-width: 7ch;
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 2.3vw, 2rem);
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    p,
+    li {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .hero p {
+      max-width: 60ch;
+    }
+
+    .badge-row,
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .badge,
+    .pill {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 238, 224, 0.94));
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 6px;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .grid-2,
+    .grid-3 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .panel {
+      padding: 24px;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .check-box {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      border-radius: 7px;
+      border: 2px solid rgba(31, 106, 104, 0.42);
+      background: white;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+    }
+
+    .info-table th,
+    .info-table td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-table th {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--accent-soft);
+      color: var(--muted);
+    }
+
+    .signal-good,
+    .signal-watch,
+    .signal-bad {
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+    }
+
+    .signal-good {
+      background: rgba(31, 106, 104, 0.08);
+    }
+
+    .signal-watch {
+      background: rgba(210, 156, 60, 0.12);
+    }
+
+    .signal-bad {
+      background: rgba(168, 67, 52, 0.09);
+    }
+
+    .formula {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      font-family: Consolas, "SFMono-Regular", monospace;
+      color: var(--ink);
+      line-height: 1.8;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">AutoPlus1 Trading Checklist</div>
+        <h1>AutoPlus1 盤中核對清單</h1>
+        <p>
+          這一頁是給你在盤中快速核對策略輸出用的。重點不是重新選腿，而是確認
+          「腳本吐出的履約價、Delta、IV、權利金」到底合不合理，並且知道自己該盯哪些風控訊號。
+        </p>
+        <div class="badge-row">
+          <span class="badge">先看腳本吐什麼</span>
+          <span class="badge">再對照 app</span>
+          <span class="badge">最後只盯風控</span>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="mini-card">
+          <strong>3 個最重要</strong>
+          <span>短 Call / 短 Put 履約價、短腿 Delta、net credit。</span>
+        </div>
+        <div class="mini-card">
+          <strong>核心觀念</strong>
+          <span>腳本負責找入場點位，你主要負責人工確認與盤中風控。</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section grid-3">
+      <article class="panel">
+        <h3>你先記住</h3>
+        <div class="pill-row">
+          <span class="pill">不要自己臨時改腿</span>
+          <span class="pill">先對價位，再看 Delta</span>
+          <span class="pill">最後才看要不要硬做</span>
+        </div>
+      </article>
+      <article class="panel">
+        <h3>腳本負責</h3>
+        <p>掃描週選、挑短腿、補保護腿、估算淨收、決定要不要進場。</p>
+      </article>
+      <article class="panel">
+        <h3>你負責</h3>
+        <p>核對 app 顯示是否合理，確認沒有選歪腿、沒有太貼價、沒有權利金太薄。</p>
+      </article>
+    </section>
+
+    <section class="section panel">
+      <h2>腳本通常會吐哪些資訊</h2>
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th>欄位</th>
+            <th>你要看什麼</th>
+            <th>用途</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>short call strike</code></td>
+            <td>上方短腿履約價</td>
+            <td>確認是不是太靠近現價</td>
+          </tr>
+          <tr>
+            <td><code>short put strike</code></td>
+            <td>下方短腿履約價</td>
+            <td>確認是不是太靠近現價</td>
+          </tr>
+          <tr>
+            <td><code>long call / long put</code></td>
+            <td>保護腿是否有補上</td>
+            <td>避免你以為是裸賣</td>
+          </tr>
+          <tr>
+            <td><code>short call delta / short put delta</code></td>
+            <td>是否接近目標 Delta</td>
+            <td>確認沒有選歪腿</td>
+          </tr>
+          <tr>
+            <td><code>iv</code></td>
+            <td>有沒有高到值得做</td>
+            <td>避免在過低波環境硬賣</td>
+          </tr>
+          <tr>
+            <td><code>net credit</code></td>
+            <td>淨收權利金夠不夠</td>
+            <td>確認不是太薄的單</td>
+          </tr>
+          <tr>
+            <td><code>spread width</code></td>
+            <td>保護腿距離</td>
+            <td>確認風險結構完整</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section grid-2">
+      <article class="panel">
+        <h2>盤前 / 進場前核對</h2>
+        <div class="checklist">
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>先看今天是不是策略會開新倉的日子</strong>
+              <p>通常先確認是不是週一或週二，且還在可交易時間內。</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>看 IV 有沒有高於門檻</strong>
+              <p>現在預設門檻已提高到 <code>MIN_IV = 0.18</code>，太低代表權利金可能不好吃。</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>確認腳本有吐出一組完整四腿</strong>
+              <p>不是只有 short Call / short Put，還要有對應保護腿。</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>先看 net credit，再看要不要做</strong>
+              <p>腿再漂亮，如果淨收太薄，實務上也很可能不值得冒風險。</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>進場後最重要只看這 3 個</h2>
+        <div class="checklist">
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>短 Call / 短 Put 履約價</strong>
+              <p>確認腿沒有選錯，也沒有意外貼近現價。</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>短腿 Delta</strong>
+              <p>確認短腿還在合理區間，沒有快速逼近風控上限。</p>
+            </div>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <div>
+              <strong>net credit / 平倉成本</strong>
+              <p>幫你感受這筆單目前還剩多少可收、以及平掉會痛到哪裡。</p>
+            </div>
+          </div>
+        </div>
+        <div class="formula">
+          最短人工核對順序<br>
+          1. 看短腿履約價<br>
+          2. 看短腿 Delta<br>
+          3. 看 net credit 是否夠厚
+        </div>
+      </article>
+    </section>
+
+    <section class="section grid-3">
+      <article class="panel signal-good">
+        <h3>正常</h3>
+        <ul>
+          <li>短腿 Delta 仍接近目標值。</li>
+          <li>部位沒有貼價過快。</li>
+          <li>IV 不算太低，淨收也還合理。</li>
+        </ul>
+      </article>
+      <article class="panel signal-watch">
+        <h3>要注意</h3>
+        <ul>
+          <li>短 Call 或短 Put Delta 明顯偏離原本區間。</li>
+          <li>標的快速接近其中一條短腿。</li>
+          <li>平倉成本開始快速拉高。</li>
+        </ul>
+      </article>
+      <article class="panel signal-bad">
+        <h3>危險</h3>
+        <ul>
+          <li>短腿 Delta 接近或超過風控上限。</li>
+          <li>腳本吐出的腿和 app 報價明顯對不起來。</li>
+          <li>明明應該有權利金，卻薄到幾乎沒意義。</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section panel">
+      <h2>用 XQ / 元大 / 永豐 看盤時，你要對照什麼</h2>
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-box"></div>
+          <div>
+            <strong>先找腳本選的那幾個履約價</strong>
+            <p>例如腳本選了 short Call 34200、short Put 33200，你就直接去對那兩個履約價。</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-box"></div>
+          <div>
+            <strong>如果 app 有 Greeks，就看 Delta</strong>
+            <p>總表能顯示最好，不能顯示就點進個別合約明細頁看。</p>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-box"></div>
+          <div>
+            <strong>如果 app 沒有 Delta，就先看價位與權利金</strong>
+            <p>至少確認合約沒找錯、權利金也沒有薄得不合理。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <h2>一句話總結</h2>
+      <div class="formula">
+        腳本幫你找入場點位<br>
+        你負責核對履約價、短腿 Delta、net credit<br>
+        真正盤中最重要的是風控，不是一直重選腿
+      </div>
+    </section>
+
+    <p class="footer-note">
+      分享頁: <code>/checklist.html</code>
+    </p>
+  </main>
+</body>
+</html>

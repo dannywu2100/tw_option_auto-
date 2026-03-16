@@ -606,7 +606,7 @@
           </div>
           <div class="mini-stat">
             <strong>IV 21%</strong>
-            <span>高於最低門檻 12%</span>
+            <span>高於最低門檻 18%</span>
           </div>
           <div class="mini-stat">
             <strong>目標 Delta 0.15</strong>
@@ -752,7 +752,7 @@
             <div class="step-index">3</div>
             <h3>確認波動率不要太低</h3>
             <p>
-              再來是 <code>get_vix_data()</code>。這次假設 IV 算出來是 0.21，高於最低門檻 0.12，
+              再來是 <code>get_vix_data()</code>。這次假設 IV 算出來是 0.21，高於最低門檻 0.18，
               代表現在不是極度低波環境，賣方還有機會收到合理權利金。
             </p>
             <div class="metric-row">
@@ -761,14 +761,14 @@
                 <span>市場波動率</span>
               </div>
               <div class="metric">
-                <strong>門檻 0.12</strong>
+                <strong>門檻 0.18</strong>
                 <span>MIN_IV</span>
               </div>
             </div>
           </div>
           <div class="step-visual">
             <div class="formula-board">
-              <div class="formula-strip">IV = 0.21<br>MIN_IV = 0.12<br><strong>0.21 &gt; 0.12 → 通過</strong></div>
+              <div class="formula-strip">IV = 0.21<br>MIN_IV = 0.18<br><strong>0.21 &gt; 0.18 → 通過</strong></div>
               <div class="signal-line"><strong>解讀</strong><span>有機會賣到像樣的權利金</span></div>
             </div>
           </div>

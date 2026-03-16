@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPlus1 實戰案例圖文教學</title>
+  <style>
+    :root {
+      --bg: #f6efe4;
+      --paper: rgba(255, 252, 246, 0.9);
+      --ink: #1f1c18;
+      --muted: #675f56;
+      --line: rgba(58, 42, 30, 0.12);
+      --accent: #bf5b2c;
+      --accent-strong: #8a3512;
+      --teal: #1d6f72;
+      --gold: #d9a441;
+      --danger: #b1432f;
+      --success: #2f7555;
+      --shadow: 0 20px 60px rgba(72, 46, 23, 0.12);
+      --radius: 24px;
+      --radius-sm: 18px;
+      --content: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(217, 164, 65, 0.22), transparent 30%),
+        radial-gradient(circle at top right, rgba(29, 111, 114, 0.18), transparent 35%),
+        linear-gradient(180deg, #fbf7ef 0%, #f4ecdf 55%, #efe4d4 100%);
+    }
+
+    a {
+      color: var(--accent-strong);
+    }
+
+    .page-shell {
+      width: min(calc(100% - 32px), var(--content));
+      margin: 0 auto;
+      padding: 24px 0 72px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 251, 245, 0.96), rgba(250, 241, 227, 0.92));
+      border: 1px solid rgba(95, 62, 32, 0.08);
+      border-radius: 36px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      margin-bottom: 22px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -30% auto;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(191, 91, 44, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--teal);
+      background: rgba(29, 111, 114, 0.1);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      max-width: 9ch;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      font-size: 1.12rem;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.78;
+      font-size: 1rem;
+    }
+
+    .hero-copy > p {
+      max-width: 60ch;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .badge {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(58, 42, 30, 0.1);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero-visual {
+      align-self: stretch;
+      background: linear-gradient(180deg, rgba(255, 250, 241, 0.92), rgba(245, 234, 217, 0.92));
+      border: 1px solid rgba(58, 42, 30, 0.08);
+      border-radius: 28px;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .mini-stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .mini-stat {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.74);
+      border-radius: 18px;
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .payoff-card {
+      background: #fffdf8;
+      border-radius: 22px;
+      padding: 16px;
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    .payoff-card svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .intro-grid,
+    .scenario-grid,
+    .resource-grid {
+      display: grid;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .intro-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .scenario-grid {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 22px;
+    }
+
+    .resource-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      margin-top: 22px;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px;
+    }
+
+    .panel.kpi {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 249, 239, 0.92)),
+        linear-gradient(135deg, rgba(29, 111, 114, 0.12), rgba(191, 91, 44, 0.08));
+    }
+
+    .panel ul,
+    .panel ol {
+      margin: 16px 0 0;
+      padding-left: 1.2rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .section-header {
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .section-header p {
+      max-width: 68ch;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(29, 111, 114, 0.08);
+      color: var(--teal);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 1fr 0.95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .step-text,
+    .step-visual {
+      border-radius: var(--radius);
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: rgba(255, 252, 247, 0.92);
+    }
+
+    .step-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      min-width: 130px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(58, 42, 30, 0.1);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .signal-board,
+    .option-table,
+    .structure-board,
+    .formula-board,
+    .status-board {
+      height: 100%;
+    }
+
+    .signal-board,
+    .formula-board,
+    .status-board {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .signal-line,
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(58, 42, 30, 0.08);
+      font-size: 0.94rem;
+    }
+
+    .signal-line strong,
+    .status-line strong {
+      color: var(--ink);
+    }
+
+    .ok {
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .warn {
+      color: var(--danger);
+      font-weight: 800;
+    }
+
+    .option-table {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(249, 240, 227, 0.92));
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    th {
+      font-size: 0.84rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      background: rgba(191, 91, 44, 0.08);
+    }
+
+    .selected {
+      background: rgba(47, 117, 85, 0.1);
+      font-weight: 700;
+    }
+
+    .structure-board {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .position-figure {
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 238, 224, 0.96));
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    .position-figure svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .position-caption {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .caption-chip {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    .caption-chip strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .caption-chip.short {
+      box-shadow: inset 0 0 0 2px rgba(191, 91, 44, 0.12);
+    }
+
+    .caption-chip.long {
+      box-shadow: inset 0 0 0 2px rgba(29, 111, 114, 0.12);
+    }
+
+    .formula-strip {
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      border: 1px solid rgba(58, 42, 30, 0.08);
+      font-family: "Consolas", "SFMono-Regular", monospace;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    .scenario-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scenario-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, var(--teal), var(--gold), var(--accent));
+    }
+
+    .scenario-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(191, 91, 44, 0.08);
+      color: var(--accent-strong);
+      font-weight: 800;
+      font-size: 0.86rem;
+    }
+
+    .chart-box {
+      margin-top: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(249, 239, 224, 0.96));
+      border: 1px solid rgba(58, 42, 30, 0.08);
+      padding: 12px;
+    }
+
+    .chart-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .chart-note {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .chart-pill {
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(58, 42, 30, 0.08);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .check-card {
+      border-radius: 22px;
+      padding: 24px;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid var(--line);
+    }
+
+    .check-card.good {
+      box-shadow: inset 0 0 0 1px rgba(47, 117, 85, 0.12);
+    }
+
+    .check-card.bad {
+      box-shadow: inset 0 0 0 1px rgba(177, 67, 47, 0.12);
+    }
+
+    .check-card ul {
+      margin-top: 12px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 1000px) {
+      .hero,
+      .step,
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .intro-grid,
+      .scenario-grid,
+      .check-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell {
+        width: min(calc(100% - 20px), var(--content));
+        padding-top: 10px;
+      }
+
+      .hero,
+      .panel,
+      .step-text,
+      .step-visual,
+      .check-card {
+        padding: 20px;
+      }
+
+      .position-caption,
+      .mini-stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">AutoPlus1 Case Walkthrough</div>
+        <h1>AutoPlus1 實戰案例圖文教學</h1>
+        <p>
+          這一頁把原本的文字 walkthrough 重新整理成圖文對照版本。你可以把它當成
+          「第一次看懂 AutoPlus1 的速讀頁」: 先理解何時進場、怎麼組部位、何時出場，再回頭看程式或參數表。
+        </p>
+        <div class="badge-row">
+          <div class="badge">週一 / 週二尋找開倉點</div>
+          <div class="badge">Delta 0.15 附近選短腿</div>
+          <div class="badge">雙邊有限風險 Credit Spread</div>
+          <div class="badge">週三 13:30 強制平倉</div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="mini-stat-grid">
+          <div class="mini-stat">
+            <strong>TXF 33707</strong>
+            <span>參考 2026/03/12 官方近月盤位</span>
+          </div>
+          <div class="mini-stat">
+            <strong>IV 21%</strong>
+            <span>高於最低門檻 12%</span>
+          </div>
+          <div class="mini-stat">
+            <strong>目標 Delta 0.15</strong>
+            <span>偏價外，收權利金為主</span>
+          </div>
+          <div class="mini-stat">
+            <strong>風控上限 0.35</strong>
+            <span>超過就不繼續硬扛</span>
+          </div>
+        </div>
+
+        <div class="payoff-card">
+          <svg viewBox="0 0 420 220" aria-label="雙邊 credit spread 收益示意圖">
+            <defs>
+              <linearGradient id="curve" x1="0%" x2="100%">
+                <stop offset="0%" stop-color="#1d6f72"/>
+                <stop offset="55%" stop-color="#bf5b2c"/>
+                <stop offset="100%" stop-color="#d9a441"/>
+              </linearGradient>
+            </defs>
+            <rect x="0" y="0" width="420" height="220" rx="18" fill="#fffaf3"/>
+            <line x1="36" y1="175" x2="392" y2="175" stroke="#bca992" stroke-width="2"/>
+            <line x1="210" y1="24" x2="210" y2="190" stroke="#dbc8b3" stroke-width="2" stroke-dasharray="6 6"/>
+            <path d="M52 152 C110 150, 120 90, 164 86 L256 86 C300 90, 310 150, 368 152" fill="none" stroke="url(#curve)" stroke-width="8" stroke-linecap="round"/>
+            <text x="44" y="198" font-size="13" fill="#675f56">深 OTM Put</text>
+            <text x="176" y="206" font-size="13" fill="#675f56">安全區</text>
+            <text x="286" y="198" font-size="13" fill="#675f56">深 OTM Call</text>
+            <text x="219" y="42" font-size="13" fill="#8a3512">最大獲利區</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <article class="panel kpi">
+        <h3>一句話先講完</h3>
+        <p>
+          AutoPlus1 會在週一或週二，找出台指週選中最接近 Delta 0.15 的價外 Call 與 Put，
+          補上保護腿形成有限風險結構，再持續盯 Delta 風險與週三時間點。
+        </p>
+      </article>
+      <article class="panel">
+        <h3>這頁最適合誰看</h3>
+        <ul>
+          <li>第一次接觸 AutoPlus1 的人</li>
+          <li>想從案例理解策略，不想先看程式的人</li>
+          <li>想把「開倉邏輯」和「出場條件」一次看懂的人</li>
+        </ul>
+      </article>
+      <article class="panel">
+        <h3>先記住三件事</h3>
+        <ul>
+          <li>開倉不是天天做，要先過時間、籌碼、IV 檢查。</li>
+          <li>這不是裸賣，系統一定會補保護腿。</li>
+          <li>策略重點是風控，不是拚每一筆都抱到結算。</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <div>
+          <h2>本次案例設定</h2>
+          <p>下面這些數值就是整頁圖文的共同背景，後面的每個步驟都會圍繞這組假設往下展開。</p>
+        </div>
+      </div>
+      <div class="pill-list">
+        <span class="pill">案例時間: 2026/03/16 週一 09:12</span>
+        <span class="pill">標的: 台指週選 TXO</span>
+        <span class="pill">參考價: TXF 33707</span>
+        <span class="pill">IV: 0.21</span>
+        <span class="pill">Target Delta: 0.15</span>
+        <span class="pill">Max Risk Delta: 0.35</span>
+        <span class="pill">合約乘數: 50</span>
+        <span class="pill">強制平倉: 週三 13:30</span>
+        <span class="pill">價位重寫基準: 2026/03/12 官方盤位</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>從開倉到出場的完整流程</h2>
+          <p>這裡照著系統真的會做的順序走一遍，每一步左邊講人話，右邊給你一個視覺化參照。</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">1</div>
+            <h3>先檢查現在能不能考慮開倉</h3>
+            <p>
+              系統一進入 <code>run()</code>，不會馬上掃合約，而是先看兩件事: 有沒有在交易時段內，以及今天是不是週一或週二。
+              本案例把時間改成 2026 年 3 月 16 日星期一 09:12，所以可以進到下一關。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>2026/03/16 09:12</strong>
+                <span>位於日盤 08:45-13:45</span>
+              </div>
+              <div class="metric">
+                <strong>星期一</strong>
+                <span>符合開新倉日</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="signal-board">
+              <div class="signal-line"><strong>交易時段檢查</strong><span class="ok">PASS</span></div>
+              <div class="signal-line"><strong>週期檢查</strong><span class="ok">PASS</span></div>
+              <div class="signal-line"><strong>是否繼續往下</strong><span class="ok">可以掃描</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">2</div>
+            <h3>籌碼條件先過濾一次</h3>
+            <p>
+              接著會呼叫 <code>get_chip_signal()</code>。目前它比較像預留入口，所以這份示範直接假設籌碼條件通過。
+              如果沒過，系統這輪就停在這裡，不會硬做單。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>籌碼信號</strong>
+                <span>示範案例設為通過</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="status-board">
+              <div class="status-line"><strong>Signal Source</strong><span>get_chip_signal()</span></div>
+              <div class="status-line"><strong>評估結果</strong><span class="ok">條件可接受</span></div>
+              <div class="status-line"><strong>動作</strong><span>進入 IV 檢查</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">3</div>
+            <h3>確認波動率不要太低</h3>
+            <p>
+              再來是 <code>get_vix_data()</code>。這次假設 IV 算出來是 0.21，高於最低門檻 0.12，
+              代表現在不是極度低波環境，賣方還有機會收到合理權利金。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>IV 0.21</strong>
+                <span>市場波動率</span>
+              </div>
+              <div class="metric">
+                <strong>門檻 0.12</strong>
+                <span>MIN_IV</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="formula-board">
+              <div class="formula-strip">IV = 0.21<br>MIN_IV = 0.12<br><strong>0.21 &gt; 0.12 → 通過</strong></div>
+              <div class="signal-line"><strong>解讀</strong><span>有機會賣到像樣的權利金</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">4</div>
+            <h3>掃描最接近 Delta 0.15 的候選合約</h3>
+            <p>
+              這是核心步驟。系統會以最近週選為範圍，掃出同時夠價外、Delta 又接近 0.15 的 Call 和 Put，
+              然後挑出最適合當短腿的兩條。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>短 Call</strong>
+                <span>34200 / Delta +0.14</span>
+              </div>
+              <div class="metric">
+                <strong>短 Put</strong>
+                <span>33200 / Delta -0.16</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="option-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>合約</th>
+                    <th>類型</th>
+                    <th>Delta</th>
+                    <th>權利金</th>
+                    <th>狀態</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="selected">
+                    <td>34200</td>
+                    <td>Call</td>
+                    <td>+0.14</td>
+                    <td>172</td>
+                    <td>選為短 Call</td>
+                  </tr>
+                  <tr>
+                    <td>34300</td>
+                    <td>Call</td>
+                    <td>+0.10</td>
+                    <td>139</td>
+                    <td>作為保護腿候選</td>
+                  </tr>
+                  <tr class="selected">
+                    <td>33200</td>
+                    <td>Put</td>
+                    <td>-0.16</td>
+                    <td>146</td>
+                    <td>選為短 Put</td>
+                  </tr>
+                  <tr>
+                    <td>33100</td>
+                    <td>Put</td>
+                    <td>-0.11</td>
+                    <td>118</td>
+                    <td>作為保護腿候選</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">5</div>
+            <h3>把短腿補成有限風險結構</h3>
+            <p>
+              AutoPlus1 不做裸賣。選出短腿之後，會再往外各補上一條長腿，
+              形成雙邊 Credit Spread。這次因為標的價格高於 10000，所以保護腿寬度設為 100 點。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>Spread Width</strong>
+                <span>100 點</span>
+              </div>
+              <div class="metric">
+                <strong>結構</strong>
+                <span>Iron Condor 風格雙邊收租</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="structure-board">
+              <div class="position-figure">
+                <svg viewBox="0 0 560 270" aria-label="AutoPlus1 部位說明圖">
+                  <rect x="0" y="0" width="560" height="270" rx="22" fill="#fffaf3"/>
+                  <text x="28" y="34" font-size="18" font-weight="800" fill="#1f1c18">AutoPlus1 部位結構</text>
+                  <text x="28" y="58" font-size="12" fill="#675f56">用四條腿把雙邊收租變成有限風險結構</text>
+
+                  <line x1="48" y1="190" x2="512" y2="190" stroke="#d8c7b2" stroke-width="3"/>
+                  <line x1="104" y1="174" x2="104" y2="206" stroke="#1d6f72" stroke-width="4"/>
+                  <line x1="184" y1="156" x2="184" y2="206" stroke="#bf5b2c" stroke-width="6"/>
+                  <line x1="376" y1="156" x2="376" y2="206" stroke="#bf5b2c" stroke-width="6"/>
+                  <line x1="456" y1="174" x2="456" y2="206" stroke="#1d6f72" stroke-width="4"/>
+
+                  <path d="M72 168 C120 166, 140 120, 182 116 L378 116 C420 120, 440 166, 488 168" fill="none" stroke="#8a3512" stroke-width="8" stroke-linecap="round"/>
+                  <path d="M72 168 C120 166, 140 120, 182 116" fill="none" stroke="#1d6f72" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+                  <path d="M378 116 C420 120, 440 166, 488 168" fill="none" stroke="#1d6f72" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+
+                  <rect x="68" y="84" width="72" height="34" rx="17" fill="rgba(29,111,114,0.14)" stroke="rgba(29,111,114,0.36)"/>
+                  <rect x="148" y="70" width="86" height="40" rx="20" fill="rgba(191,91,44,0.16)" stroke="rgba(191,91,44,0.34)"/>
+                  <rect x="328" y="70" width="86" height="40" rx="20" fill="rgba(191,91,44,0.16)" stroke="rgba(191,91,44,0.34)"/>
+                  <rect x="420" y="84" width="72" height="34" rx="17" fill="rgba(29,111,114,0.14)" stroke="rgba(29,111,114,0.36)"/>
+
+                  <text x="80" y="106" font-size="14" font-weight="700" fill="#1d6f72">Buy Put</text>
+                  <text x="164" y="95" font-size="14" font-weight="700" fill="#8a3512">Sell Put</text>
+                  <text x="345" y="95" font-size="14" font-weight="700" fill="#8a3512">Sell Call</text>
+                  <text x="432" y="106" font-size="14" font-weight="700" fill="#1d6f72">Buy Call</text>
+
+                  <text x="80" y="226" font-size="13" fill="#675f56">33100</text>
+                  <text x="158" y="226" font-size="13" fill="#675f56">33200</text>
+                  <text x="350" y="226" font-size="13" fill="#675f56">34200</text>
+                  <text x="430" y="226" font-size="13" fill="#675f56">34300</text>
+
+                  <text x="198" y="104" font-size="11" fill="#8a3512">收租核心</text>
+                  <text x="395" y="104" font-size="11" fill="#8a3512">收租核心</text>
+                  <text x="226" y="146" font-size="14" font-weight="800" fill="#8a3512">最大獲利區</text>
+                  <text x="201" y="246" font-size="12" fill="#675f56">價位留在兩條短腿之間，時間價值最有利</text>
+                </svg>
+              </div>
+              <div class="position-caption">
+                <div class="caption-chip short">
+                  <strong>短腿 = 收權利金</strong>
+                  <p>34200 Call 與 33200 Put 是主要收益來源，也是 Delta 風險最需要盯的兩條腿。</p>
+                </div>
+                <div class="caption-chip long">
+                  <strong>長腿 = 限制最大損失</strong>
+                  <p>34300 Call 與 33100 Put 把原本裸賣的尾端風險包住，這點很像你貼的教學圖風格。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">6</div>
+            <h3>算這筆交易值不值得做</h3>
+            <p>
+              把四條腿的價格帶進去後，系統先算淨收權利金。如果保護腿太貴，讓
+              <code>net_credit &lt;= 0</code>，就算方向看起來還行也不做，因為風險報酬比不對。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>net credit = 61</strong>
+                <span>點數淨收</span>
+              </div>
+              <div class="metric">
+                <strong>net amount = 3050</strong>
+                <span>61 × 50 合約乘數</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="formula-board">
+              <div class="formula-strip">(172 - 139) + (146 - 118) = 61</div>
+              <div class="formula-strip">61 × 50 = 3050</div>
+              <div class="signal-line"><strong>是否開倉</strong><span class="ok">值得建立部位</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-text">
+            <div class="step-index">7</div>
+            <h3>建立部位後，重點改成風控</h3>
+            <p>
+              只要沒有重複倉位、也沒超過最大持倉數，系統就會把這組四腿寫進
+              <code>active_positions</code>，發出通知，接著持續監控 Delta 和時間條件。
+            </p>
+            <div class="metric-row">
+              <div class="metric">
+                <strong>active_positions</strong>
+                <span>新增一筆四腿部位</span>
+              </div>
+              <div class="metric">
+                <strong>監控項目</strong>
+                <span>Delta 風險 / 週三 13:30</span>
+              </div>
+            </div>
+          </div>
+          <div class="step-visual">
+            <div class="status-board">
+              <div class="status-line"><strong>交易紀錄</strong><span class="ok">已寫入</span></div>
+              <div class="status-line"><strong>Telegram</strong><span class="ok">發送開倉通知</span></div>
+              <div class="status-line"><strong>接下來</strong><span>持續巡檢，不重新選腿</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div>
+          <h2>四種最重要的情境</h2>
+          <p>這四張卡幾乎就是你之後看 dry-run、log 或 Telegram 通知時，最常遇到的畫面。</p>
+        </div>
+      </div>
+
+      <div class="scenario-grid">
+        <article class="panel scenario-card">
+          <div class="scenario-label">案例 A</div>
+          <h3>正常開倉</h3>
+          <p>
+            時間、籌碼、IV 都通過，成功找出 34200 Call 與 33200 Put 當短腿，再補上 34300 Call 與 33100 Put
+            作為保護腿，最後收進 3050 的理論權利金。
+          </p>
+          <div class="chart-box">
+            <svg viewBox="0 0 420 220" aria-label="正常開倉示意">
+              <rect x="0" y="0" width="420" height="220" rx="18" fill="#fffaf3"/>
+              <text x="22" y="30" font-size="17" font-weight="800" fill="#1f1c18">部位建立完成</text>
+              <text x="22" y="49" font-size="12" fill="#675f56">四腿齊備後才算真正進場</text>
+              <line x1="38" y1="164" x2="382" y2="164" stroke="#cfbea9" stroke-width="2"/>
+              <path d="M58 144 C112 142, 134 104, 170 100 L250 100 C286 104, 308 142, 362 144" fill="none" stroke="#8a3512" stroke-width="8" stroke-linecap="round"/>
+              <rect x="72" y="78" width="62" height="30" rx="15" fill="rgba(29,111,114,0.14)"/>
+              <rect x="142" y="66" width="74" height="36" rx="18" fill="rgba(191,91,44,0.18)"/>
+              <rect x="222" y="66" width="74" height="36" rx="18" fill="rgba(191,91,44,0.18)"/>
+              <rect x="304" y="78" width="62" height="30" rx="15" fill="rgba(29,111,114,0.14)"/>
+              <text x="83" y="98" font-size="13" fill="#1d6f72">Buy Put</text>
+              <text x="160" y="89" font-size="13" fill="#8a3512">Sell Put</text>
+              <text x="239" y="89" font-size="13" fill="#8a3512">Sell Call</text>
+              <text x="315" y="98" font-size="13" fill="#1d6f72">Buy Call</text>
+              <text x="78" y="186" font-size="12" fill="#675f56">33100</text>
+              <text x="156" y="186" font-size="12" fill="#675f56">33200</text>
+              <text x="237" y="186" font-size="12" fill="#675f56">34200</text>
+              <text x="316" y="186" font-size="12" fill="#675f56">34300</text>
+              <text x="143" y="134" font-size="13" font-weight="800" fill="#8a3512">淨收 61 點</text>
+              <text x="140" y="204" font-size="12" fill="#675f56">保護腿在外圍，短腿夾出主要收租區</text>
+            </svg>
+          </div>
+          <div class="chart-note">
+            <span class="chart-pill">外側藍綠色 = 保護腿</span>
+            <span class="chart-pill">中央橘色 = 真正收租的短腿</span>
+            <span class="chart-pill">視覺語言參考教學型選擇權圖卡</span>
+          </div>
+        </article>
+
+        <article class="panel scenario-card">
+          <div class="scenario-label">案例 B</div>
+          <h3>正常持有，不觸發風控</h3>
+          <p>
+            若行情仍在安全區，短 Call Delta 可能從 0.14 升到 0.17，短 Put Delta 從 -0.16 收斂到 -0.12，
+            都沒有碰到 0.35 上限，系統就繼續持有，讓時間價值慢慢流失。
+          </p>
+          <div class="chart-box">
+            <svg viewBox="0 0 420 190" aria-label="正常持有示意">
+              <rect x="0" y="0" width="420" height="190" rx="18" fill="#fffaf3"/>
+              <line x1="44" y1="145" x2="376" y2="145" stroke="#cfbea9" stroke-width="2"/>
+              <path d="M66 120 C135 98, 162 102, 210 102 C255 102, 295 110, 354 122" fill="none" stroke="#2f7555" stroke-width="8" stroke-linecap="round"/>
+              <text x="78" y="48" font-size="14" fill="#2f7555">Delta 仍低於 0.35</text>
+              <text x="86" y="165" font-size="12" fill="#675f56">時間價值遞減中</text>
+            </svg>
+          </div>
+        </article>
+
+        <article class="panel scenario-card">
+          <div class="scenario-label">案例 C</div>
+          <h3>市場急拉，風險升高，自動平倉</h3>
+          <p>
+            假設週二下午 TXF 從 33707 拉到 34180，短 Call Delta 升到 0.38。這時已經超過
+            <code>MAX_DELTA_RISK = 0.35</code>，系統會立刻觸發平倉，不讓風險失控。
+          </p>
+          <div class="chart-box">
+            <svg viewBox="0 0 420 220" aria-label="風控觸發示意">
+              <rect x="0" y="0" width="420" height="220" rx="18" fill="#fffaf3"/>
+              <text x="22" y="30" font-size="17" font-weight="800" fill="#1f1c18">上漲壓迫短 Call</text>
+              <text x="22" y="49" font-size="12" fill="#675f56">短腿被價格逼近時，Delta 會加速惡化</text>
+              <line x1="38" y1="168" x2="382" y2="168" stroke="#cfbea9" stroke-width="2"/>
+              <rect x="236" y="65" width="72" height="36" rx="18" fill="rgba(191,91,44,0.18)"/>
+              <text x="246" y="88" font-size="13" fill="#8a3512">Sell Call 34200</text>
+              <line x1="272" y1="101" x2="272" y2="168" stroke="#b1432f" stroke-width="3" stroke-dasharray="8 6"/>
+              <path d="M68 156 C120 152, 168 142, 218 126 C252 114, 286 92, 344 42" fill="none" stroke="#b1432f" stroke-width="8" stroke-linecap="round"/>
+              <polygon points="344,42 332,48 336,58" fill="#b1432f"/>
+              <text x="300" y="36" font-size="13" font-weight="800" fill="#b1432f">Delta 0.38</text>
+              <text x="246" y="186" font-size="12" fill="#675f56">價格逼近短 Call，風險跳升</text>
+              <rect x="44" y="70" width="116" height="54" rx="16" fill="rgba(177,67,47,0.08)" stroke="rgba(177,67,47,0.18)"/>
+              <text x="60" y="92" font-size="12" fill="#b1432f">觸發條件</text>
+              <text x="60" y="112" font-size="13" font-weight="800" fill="#b1432f">0.38 &gt; 0.35</text>
+            </svg>
+          </div>
+          <div class="chart-note">
+            <span class="chart-pill">價格往右上急拉</span>
+            <span class="chart-pill">短 Call Delta 超標</span>
+            <span class="chart-pill">系統立即執行平倉</span>
+          </div>
+        </article>
+
+        <article class="panel scenario-card">
+          <div class="scenario-label">案例 D</div>
+          <h3>風險沒爆，但週三 13:30 到了也要下班</h3>
+          <p>
+            有些部位一路都沒碰到風控上限，但只要到了週三 13:30，策略仍會強制出場。這不是看壞，而是避免拖到最後結算尾盤。
+          </p>
+          <div class="chart-box">
+            <svg viewBox="0 0 420 190" aria-label="時間到強制平倉示意">
+              <rect x="0" y="0" width="420" height="190" rx="18" fill="#fffaf3"/>
+              <circle cx="210" cy="94" r="54" fill="rgba(217,164,65,0.18)" stroke="#d9a441" stroke-width="4"/>
+              <line x1="210" y1="94" x2="210" y2="58" stroke="#8a3512" stroke-width="6" stroke-linecap="round"/>
+              <line x1="210" y1="94" x2="242" y2="110" stroke="#8a3512" stroke-width="6" stroke-linecap="round"/>
+              <text x="164" y="160" font-size="15" fill="#8a3512">週三 13:30 強制平倉</text>
+            </svg>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section panel">
+      <div class="section-header">
+        <div>
+          <h2>你實際盯盤時，什麼算正常，什麼要小心</h2>
+          <p>這一段可以直接對照你未來看到的 dry-run 結果、log 或通知訊息。</p>
+        </div>
+      </div>
+      <div class="check-grid">
+        <div class="check-card good">
+          <h3>下面這些通常算正常</h3>
+          <ul>
+            <li>只有週一或週二才考慮開新倉。</li>
+            <li>有時整天不開倉，因為籌碼或 IV 沒過。</li>
+            <li>找到履約價後，仍可能因為 net credit 不夠而放棄。</li>
+            <li>建倉後很快平倉，不一定代表系統壞掉，可能只是風控有在工作。</li>
+          </ul>
+        </div>
+        <div class="check-card bad">
+          <h3>下面這些需要提高警覺</h3>
+          <ul>
+            <li>一直抓不到正確合約，或抓到明顯不合理的履約價。</li>
+            <li><code>get_chip_signal()</code> 的結果和你理解的條件差很多。</li>
+            <li>IV 數字看起來像單位錯了，或長期明顯異常。</li>
+            <li>應該有權利金卻一直得到 <code>net_credit &lt;= 0</code>。</li>
+            <li>明明 Delta 已經失控，卻沒有任何風險通知。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="resource-grid">
+      <article class="panel">
+        <h2>超白話流程總結</h2>
+        <div class="formula-strip">
+          先看今天能不能做<br>
+          → 再看籌碼和波動率行不行<br>
+          → 找最像 Delta 0.15 的價外 Call / Put<br>
+          → 上下各補一條保護腿<br>
+          → 算這筆單收的錢夠不夠<br>
+          → 可以就做<br>
+          → 做完一直盯 Delta 風險<br>
+          → 危險就砍<br>
+          → 不危險也在週三 13:30 下班
+        </div>
+      </article>
+
+      <article class="panel">
+        <h2>延伸閱讀</h2>
+        <p>如果你想從直覺進一步走到程式層，最適合接著看下面兩份文件。</p>
+        <ul>
+          <li><a href="./strategy_autoplus1.md">策略說明: strategy_autoplus1.md</a></li>
+          <li><a href="./parameter_reference.md">參數對照: parameter_reference.md</a></li>
+        </ul>
+        <p style="margin-top: 14px;">
+          如果你要，我也可以下一步再把這頁補成「帶 Telegram 訊息對照」或「失敗案例版」。
+        </p>
+      </article>
+    </section>
+
+    <p class="footer-note">
+      檔案位置: <code>docs/strategy_autoplus1_case_walkthrough.html</code>
+    </p>
+  </main>
+</body>
+</html>
